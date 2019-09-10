@@ -1,0 +1,24 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'my.demo'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	implementation 'org.springframework.boot.experimental:spring-boot-starter-web-reactive'
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway:2.1.2.RELEASE'
+
+	compile 'org.apache.commons:commons-lang3'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

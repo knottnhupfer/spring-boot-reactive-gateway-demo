@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: put
+          uri: 'http://127.0.0.1:8080/internal/api'
+          predicates:
+            - Path=/api/**
+            - Method=PUT
+          filters:
+            - RewritePath=/api, /internal/api
+        - id: get
+          uri: 'http://127.0.0.1:8080/internal/api'
+          predicates:
+            - Path=/api/**
+            - Method=GET
+          filters:
+            - RewritePath=/api, /internal/api
+
+##
+
+# curl --user user:secret -v http://localhost:8080/api/test/hello
+
+# curl --user user:secret -v http://localhost:8080/api/testing/index.html --upload-file README.md
