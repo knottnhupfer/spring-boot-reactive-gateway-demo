@@ -23,18 +23,19 @@ public class DemoController {
 	}
 
 	@PutMapping(value = "/{value}/**", consumes = "application/octet-stream")
-	public  Mono<ResponseEntity>  putArtifact(ServerHttpRequest request, @RequestBody ByteArrayResource resource, @PathVariable("value") String value) {
+	public  Mono<ResponseEntity>  putArtifact(ServerHttpRequest request, @RequestBody Mono<ByteArrayResource> resource, @PathVariable("value") String value) {
 		System.out.println("Upload path is (#2): " + request.getPath());
 		File file = new File(request.getPath().toString());
 		System.out.println("Uploaded file is (#1): " + file.getName());
 
-		writeFileToFileSystem(resource, file);
+		resource.flatMap(this::readData);
 		return Mono.just(ResponseEntity.ok().build());
 	}
 
-	private void writeFileToFileSystem(@RequestBody ByteArrayResource resource, File file) {
+	private <R> Mono<? extends R> readData(ByteArrayResource resource) {
 		try {
-			String outFileName = "storage/" + file.getName();
+			System.out.println("Upload path is (#44): ");
+			String outFileName = "storage/test.txt";
 			InputStream is = resource.getInputStream();
 			FileOutputStream out = new FileOutputStream(outFileName);
 			StreamUtils.copy(is, out);
@@ -44,5 +45,20 @@ public class DemoController {
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while reading and writing file.");
 		}
+		return null;
 	}
+//
+//	private void writeFileToFileSystem(Mono<ByteArrayResource> resource, File file) {
+//		try {
+//			String outFileName = "storage/" + file.getName();
+//			InputStream is = resource.getInputStream();
+//			FileOutputStream out = new FileOutputStream(outFileName);
+//			StreamUtils.copy(is, out);
+//			is.close();
+//			out.close();
+//			System.out.println(String.format("File '%s' successfully written.", outFileName));
+//		} catch (IOException e) {
+//			throw new IllegalStateException("Error while reading and writing file.");
+//		}
+//	}
 }
